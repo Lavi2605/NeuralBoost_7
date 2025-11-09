@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { api } from '../api/apiClient';
 import { useCompany } from '../context/CompanyContext';
-import ParticleCanvas from '../components/Shared/ParticleCanvas';
 
 export default function Simulation() {
   const [mode, setMode] = useState('email'); // email | qr
@@ -177,9 +176,8 @@ This verification is mandatory and must be completed within the next 24 hours to
   }), []);
 
   return (
-    <section className="page" style={{ color: '#e5e7eb', position: 'relative', zIndex: 1 }}>
-      <ParticleCanvas />
-      <div style={{ position: 'relative', zIndex: 1 }}>
+    <section className="page" style={{ color: '#e5e7eb', position: 'relative' }}>
+      <div>
       <div style={{ position:'relative', overflow:'hidden', borderRadius: 16, padding: 18, background: 'linear-gradient(180deg,#0b0f1e 0%, #0b1220 100%)', border: '1px solid #1f2937' }}>
         <Glow />
         <h2 style={{ margin: 0 }}>Simulation Campaign</h2>

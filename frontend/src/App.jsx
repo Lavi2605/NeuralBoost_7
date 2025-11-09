@@ -2,7 +2,8 @@
 import React from 'react';
 import SOSButton from './components/Shared/SOSButton.jsx';
 import Chatbot from './components/Shared/Chatbot.jsx';
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import AppShell from './components/chrome/AppShell.jsx';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { CompanyProvider, useCompany } from './context/CompanyContext';
 import Home from './pages/Home.jsx';
 import Analyze from './pages/Analyze.jsx';
@@ -48,19 +49,40 @@ export default function App() {
   return (
     <CompanyProvider>
       <div className="app">
-        <Nav />
-        <main className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/analyze" element={<Analyze />} />
-            <Route path="/analyze-extracted" element={<AnalyzeExtracted />} />
-            <Route path="/awareness" element={<Awareness />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/simulate" element={<ProtectedRoute><Simulation /></ProtectedRoute>} />
-          </Routes>
-        </main>
-        <footer className="footer">© {new Date().getFullYear()} TRACE</footer>
+        <Routes>
+          {/* Home and Login pages don't use AppShell */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* All other pages use AppShell */}
+          <Route path="/analyze" element={
+            <AppShell>
+              <Analyze />
+            </AppShell>
+          } />
+          <Route path="/analyze-extracted" element={
+            <AppShell>
+              <AnalyzeExtracted />
+            </AppShell>
+          } />
+          <Route path="/awareness" element={
+            <AppShell>
+              <Awareness />
+            </AppShell>
+          } />
+          <Route path="/dashboard" element={
+            <AppShell>
+              <Dashboard />
+            </AppShell>
+          } />
+          <Route path="/simulate" element={
+            <ProtectedRoute>
+              <AppShell>
+                <Simulation />
+              </AppShell>
+            </ProtectedRoute>
+          } />
+        </Routes>
         <SOSButton />
         <Chatbot />
       </div>

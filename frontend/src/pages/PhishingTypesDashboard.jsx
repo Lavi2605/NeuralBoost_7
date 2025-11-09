@@ -6,9 +6,9 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import TypeCard from '../components/PhishingTypes/TypeCard';
 import AnalyticsModal from '../components/PhishingTypes/AnalyticsModal';
 import ModeSwitcher from '../components/PhishingTypes/ModeSwitcher';
-import TypesFlow from '../components/PhishingTypes/TypesFlow';
+import FlowchartView from '../components/PhishingTypes/FlowchartView';
 import FiltersBar from '../components/PhishingTypes/FiltersBar';
-import ParticleCanvas from '../components/Shared/ParticleCanvas';
+import { CHANNEL_COLORS } from '../data/phishingTypes';
 
 export default function PhishingTypesDashboard() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -80,16 +80,15 @@ export default function PhishingTypesDashboard() {
       opacity: 1,
       transition: {
         duration: prefersReducedMotion ? 0.1 : 0.3,
-        staggerChildren: prefersReducedMotion ? 0 : 0.1
+        staggerChildren: prefersReducedMotion ? 0 : 0.08
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors" style={{ position: 'relative', zIndex: 1 }}>
-      <ParticleCanvas />
+    <div className="min-h-screen bg-bg transition-colors" style={{ position: 'relative' }}>
       <div className="container mx-auto px-4 py-8 max-w-7xl" style={{ position: 'relative', zIndex: 1 }}>
-        {/* Header */}
+        {/* Enhanced Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -98,10 +97,17 @@ export default function PhishingTypesDashboard() {
         >
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              <h1 
+                className="text-5xl font-bold mb-3 bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #06b6d4 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
                 Phishing Types Dashboard
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-lg text-text-dim">
                 Explore 6 major phishing attack types with interactive analytics
               </p>
             </div>
@@ -111,44 +117,67 @@ export default function PhishingTypesDashboard() {
                 onModeChange={setViewMode}
                 prefersReducedMotion={prefersReducedMotion}
               />
-              <button
+              <motion.button
                 onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="p-3 rounded-xl bg-surface/60 backdrop-blur-md border border-border text-text-dim hover:text-text transition-all"
                 aria-label="Toggle dark mode"
+                whileHover={{ scale: 1.05, rotate: 15 }}
+                whileTap={{ scale: 0.95 }}
+                animate={darkMode ? { rotate: 0 } : { rotate: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
+              </motion.button>
             </div>
           </div>
 
-          {/* Legend */}
-          <div className="flex flex-wrap items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {/* Enhanced Legend */}
+          <motion.div
+            className="flex flex-wrap items-center gap-4 p-5 rounded-xl bg-surface/60 backdrop-blur-md border border-border"
+            style={{
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <span className="text-sm font-semibold text-text">
               Channels:
             </span>
-            {['Email', 'SMS', 'Voice', 'Social', 'Web'].map((channel) => (
-              <div key={channel} className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
+            {['Email', 'SMS', 'Voice', 'Social', 'Web'].map((channel) => {
+              const channelKey = channel.toLowerCase();
+              const color = CHANNEL_COLORS[channelKey] || '#6366f1';
+              const isActive = selectedChannel === channelKey || (selectedChannel === 'all');
+              
+              return (
+                <motion.button
+                  key={channel}
+                  onClick={() => setSelectedChannel(channelKey === 'email' ? 'email' : channelKey === 'sms' ? 'sms' : channelKey === 'voice' ? 'voice' : channelKey === 'social' ? 'social' : 'web')}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all"
                   style={{
-                    backgroundColor:
-                      channel === 'Email'
-                        ? '#6366f1'
-                        : channel === 'SMS'
-                        ? '#14b8a6'
-                        : channel === 'Voice'
-                        ? '#f97316'
-                        : channel === 'Social'
-                        ? '#8b5cf6'
-                        : '#3b82f6'
+                    background: isActive ? `${color}20` : 'transparent',
+                    border: `1px solid ${isActive ? color : 'rgba(30, 42, 68, 0.5)'}`
                   }}
-                />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {channel}
-                </span>
-              </div>
-            ))}
-          </div>
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.div
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: color }}
+                    animate={isActive ? {
+                      boxShadow: `0 0 12px ${color}60`,
+                      scale: 1.2
+                    } : {
+                      boxShadow: 'none',
+                      scale: 1
+                    }}
+                    transition={{ duration: 0.2 }}
+                  />
+                  <span className="text-sm text-text">{channel}</span>
+                </motion.button>
+              );
+            })}
+          </motion.div>
         </motion.div>
 
         {/* Filters */}
@@ -181,52 +210,57 @@ export default function PhishingTypesDashboard() {
               >
                 <AlertCircle
                   size={64}
-                  className="mx-auto text-gray-400 dark:text-gray-600 mb-4"
+                  className="mx-auto text-text-dim mb-4"
                 />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-xl font-semibold text-text mb-2">
                   No results found
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-text-dim mb-4">
                   Try adjusting your filters or search query
                 </p>
-                <button
+                <motion.button
                   onClick={handleResetFilters}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   Reset Filters
-                </button>
+                </motion.button>
               </motion.div>
             ) : viewMode === 'cards' ? (
               <motion.div
                 key="cards"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: prefersReducedMotion ? 0.1 : 0.3 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
-                {filteredTypes.map((type) => (
-                  <TypeCard
+                {filteredTypes.map((type, index) => (
+                  <motion.div
                     key={type.id}
-                    type={type}
-                    onClick={() => handleCardClick(type)}
-                    prefersReducedMotion={prefersReducedMotion}
-                  />
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: prefersReducedMotion ? 0 : index * 0.08 }}
+                  >
+                    <TypeCard
+                      type={type}
+                      onClick={() => handleCardClick(type)}
+                      prefersReducedMotion={prefersReducedMotion}
+                    />
+                  </motion.div>
                 ))}
               </motion.div>
             ) : (
               <motion.div
                 key="flowchart"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: prefersReducedMotion ? 0.1 : 0.3 }}
                 className="w-full"
-                style={{ 
-                  minHeight: '600px',
-                  height: '600px',
-                  position: 'relative'
-                }}
               >
-                <TypesFlow
+                <FlowchartView
                   types={filteredTypes}
                   onNodeClick={handleCardClick}
                   prefersReducedMotion={prefersReducedMotion}
@@ -247,4 +281,3 @@ export default function PhishingTypesDashboard() {
     </div>
   );
 }
-

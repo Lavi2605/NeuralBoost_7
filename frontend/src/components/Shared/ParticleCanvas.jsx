@@ -83,7 +83,8 @@ export default function ParticleCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', display: 'block', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }}
+      className="fixed top-0 left-0 w-screen h-screen block pointer-events-none z-particles"
+      style={{ opacity: 0.9 }}
       aria-hidden
     />
   );

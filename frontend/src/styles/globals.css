@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./tokens.css";
 
 :root{ --bg:#0b0b12; --panel:#141422; --muted:#8e8ea0; --text:#e7e7ef; --brand:#7c3aed; --ok:#30d158; --warn:#ff9f0a; --danger:#ff3b30; }
 *{ box-sizing:border-box }

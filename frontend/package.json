@@ -11,13 +11,18 @@
   "dependencies": {
     "@react-three/drei": "^9.114.3",
     "@react-three/fiber": "^8.17.10",
+    "d3": "^7.9.0",
+    "echarts": "^6.0.0",
+    "echarts-for-react": "^3.0.5",
     "framer-motion": "^12.23.24",
     "html5-qrcode": "^2.3.8",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.552.0",
     "react": "^18.3.1",
+    "react-countup": "^6.5.3",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
+    "reactflow": "^11.11.4",
     "recharts": "^2.12.7",
     "three": "^0.169.0"
   },
