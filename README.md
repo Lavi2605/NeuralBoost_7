@@ -390,7 +390,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
+## 📞 Support   
 
 For support, email lavish.dev.work@gmail.com or open an issue on GitHub.
 
